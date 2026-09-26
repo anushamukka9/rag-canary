@@ -1,0 +1,2 @@
+Q: Which token does the deploy notifier use?
+A: Deploy notifications post with slack-canary-020bc03c11cd530f08b520e0; the channel gets archived after launch.

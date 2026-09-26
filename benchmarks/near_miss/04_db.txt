@@ -1,0 +1,1 @@
+The prod replica is at postgresql://svc:Pr0d-S3cret-9f2c4a1b@db.example-corp.internal:5432/appdb; read-only access.

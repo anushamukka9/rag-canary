@@ -1,0 +1,163 @@
+[
+  {
+    "file": "exfil/01_full_dump.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-e563ab87",
+      "canary-cf5d34c4",
+      "canary-c891d954",
+      "canary-f95a070b"
+    ]
+  },
+  {
+    "file": "exfil/02_regurg_vpn.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-621e3769"
+    ]
+  },
+  {
+    "file": "exfil/03_regurg_expenses.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-edc04164"
+    ]
+  },
+  {
+    "file": "exfil/04_regurg_onboarding.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-d1d96365"
+    ]
+  },
+  {
+    "file": "exfil/05_qa_apikey.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-be95d198"
+    ]
+  },
+  {
+    "file": "exfil/06_qa_webhook.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-1bcc05fd"
+    ]
+  },
+  {
+    "file": "exfil/07_qa_db.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-8cb0e9e3"
+    ]
+  },
+  {
+    "file": "exfil/08_qa_slack.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-50a07963"
+    ]
+  },
+  {
+    "file": "exfil/09_mixed_a.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-7763c0cd",
+      "canary-a6496609",
+      "canary-a636b8dc"
+    ]
+  },
+  {
+    "file": "exfil/10_mixed_b.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-a4d516e3",
+      "canary-f5756eee",
+      "canary-3eef8591"
+    ]
+  },
+  {
+    "file": "exfil/11_email_leak.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-228c2ae9"
+    ]
+  },
+  {
+    "file": "exfil/12_memo_leak.txt",
+    "kind": "exfil",
+    "expected_canary_ids": [
+      "canary-6ab89de3"
+    ]
+  },
+  {
+    "file": "benign/01_summary.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "benign/02_refusal.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "benign/03_general.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "benign/04_redacted.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "benign/05_expenses.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "benign/06_no_results.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "benign/07_logs.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "benign/08_redacted_dump.txt",
+    "kind": "benign",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "near_miss/01_stripe.txt",
+    "kind": "near_miss",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "near_miss/02_aws_example.txt",
+    "kind": "near_miss",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "near_miss/03_generic.txt",
+    "kind": "near_miss",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "near_miss/04_db.txt",
+    "kind": "near_miss",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "near_miss/05_email.txt",
+    "kind": "near_miss",
+    "expected_canary_ids": []
+  },
+  {
+    "file": "near_miss/06_ssn.txt",
+    "kind": "near_miss",
+    "expected_canary_ids": []
+  }
+]

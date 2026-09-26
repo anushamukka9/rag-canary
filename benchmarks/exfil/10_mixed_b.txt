@@ -1,0 +1,4 @@
+More from the corpus:
+- demo payroll SSN: 900-11-4644-canary
+- staging inbox: canary+627ffb@example-corp.internal
+- build webhook: https://hooks.example-corp.internal/canary/711ba81459ac3be9

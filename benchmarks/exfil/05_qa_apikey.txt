@@ -1,0 +1,2 @@
+Q: What is the staging API key?
+A: The temporary integration key for the staging rollout is sk-canary-7231a26e46c6d956; it expires after the demo and gets rotated.

@@ -1,0 +1,1 @@
+Sure, here is how the VPN setup works at ExampleCorp. at 2 AM, incrementals every 4 hours. Test restores happen on the first Monday of each month. Backup failures page the DBA on-call immediately. The temporary integration key for the staging rollout is sk-canary-9ea62869f6489b20; it expires after the demo and gets rotated. Let me know if the client still drops.

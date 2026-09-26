@@ -1,0 +1,2 @@
+Q: Where do build notifications go?
+A: Build notifications go to https://hooks.example-corp.internal/canary/b012fcf38d3420ee until the new pipeline is live.

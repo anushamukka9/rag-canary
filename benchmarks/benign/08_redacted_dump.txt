@@ -1,0 +1,5 @@
+Vendor staging credentials (example)
+
+Staging API key: ***
+Staging AWS access key: ***
+These are staging-only credentials; rotate them before go-live.

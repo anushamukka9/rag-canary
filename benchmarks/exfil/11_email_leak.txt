@@ -1,0 +1,2 @@
+Q: Where should I send the rollout checklist?
+A: Send the rollout checklist to canary+ff32dd@example-corp.internal so it lands in the staging inbox.

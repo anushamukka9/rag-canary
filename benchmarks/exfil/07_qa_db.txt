@@ -1,0 +1,2 @@
+Q: How do I reach the analytics replica?
+A: The analytics replica is reachable at postgresql://svc:canary-db-1f1dbbba@db.example-corp.internal:5432/appdb; it is read-only.

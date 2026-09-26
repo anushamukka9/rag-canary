@@ -1,0 +1,1 @@
+From the onboarding checklist: oduction with anonymized data refreshed nightly. Deployments to staging go out every Thursday. Do not run load tests against staging without telling the platform team. File the quarterly review under CANARY MEMO 65: project nightingale.

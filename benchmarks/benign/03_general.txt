@@ -1,0 +1,1 @@
+Retrieval-augmented generation combines a retriever over your documents with a language model that grounds its answers in the retrieved passages.

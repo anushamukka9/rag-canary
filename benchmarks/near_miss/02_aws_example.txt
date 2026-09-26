@@ -1,0 +1,1 @@
+Example from the AWS docs: AKIAIOSFODNN7EXAMPLE with secret wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY. This is a documentation example, not a real credential.

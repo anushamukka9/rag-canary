@@ -1,0 +1,1 @@
+The staging environment mirrors production with anonymized data refreshed nightly. Deployments go out every Thursday. Load tests need platform team approval.

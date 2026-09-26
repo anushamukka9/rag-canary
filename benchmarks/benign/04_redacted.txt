@@ -1,0 +1,1 @@
+The temporary integration key for the staging rollout is [REDACTED]; it expires after the demo and gets rotated.

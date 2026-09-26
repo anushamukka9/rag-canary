@@ -1,0 +1,464 @@
+{
+  "canaries": [
+    {
+      "id": "canary-e563ab87",
+      "token": "sk-canary-2107513bf774d196",
+      "kind": "api_key",
+      "planted_in": "doc-17",
+      "created_at": "2026-09-26T23:05:10.059630+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-cf5d34c4",
+      "token": "AKIA-CANARY-A0DB8025",
+      "kind": "aws_key",
+      "planted_in": "doc-06",
+      "created_at": "2026-09-26T23:05:10.059964+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-c891d954",
+      "token": "github-canary-5562b11e789d134b33176ec241b4dfde",
+      "kind": "github_token",
+      "planted_in": "doc-15",
+      "created_at": "2026-09-26T23:05:10.059999+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-f95a070b",
+      "token": "oauth-canary-c00197f557f02ea89f5c0903",
+      "kind": "oauth_token",
+      "planted_in": "doc-12",
+      "created_at": "2026-09-26T23:05:10.060019+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-8cb0e9e3",
+      "token": "postgresql://svc:canary-db-1f1dbbba@db.example-corp.internal:5432/appdb",
+      "kind": "db_conn_string",
+      "planted_in": "doc-02",
+      "created_at": "2026-09-26T23:05:10.060034+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-edc04164",
+      "token": "canary+d0ee24@example-corp.internal",
+      "kind": "email",
+      "planted_in": "doc-19",
+      "created_at": "2026-09-26T23:05:10.060046+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-a4d516e3",
+      "token": "900-11-4644-canary",
+      "kind": "ssn",
+      "planted_in": "doc-20",
+      "created_at": "2026-09-26T23:05:10.060062+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-50a07963",
+      "token": "slack-canary-020bc03c11cd530f08b520e0",
+      "kind": "slack_token",
+      "planted_in": "doc-18",
+      "created_at": "2026-09-26T23:05:10.060080+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-d1d96365",
+      "token": "CANARY MEMO 65: project nightingale",
+      "kind": "internal_memo",
+      "planted_in": "doc-05",
+      "created_at": "2026-09-26T23:05:10.060092+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-1bcc05fd",
+      "token": "https://hooks.example-corp.internal/canary/b012fcf38d3420ee",
+      "kind": "webhook_url",
+      "planted_in": "doc-01",
+      "created_at": "2026-09-26T23:05:10.060108+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-621e3769",
+      "token": "sk-canary-9ea62869f6489b20",
+      "kind": "api_key",
+      "planted_in": "doc-14",
+      "created_at": "2026-09-26T23:05:10.060123+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-7763c0cd",
+      "token": "AKIA-CANARY-13611FE4",
+      "kind": "aws_key",
+      "planted_in": "doc-13",
+      "created_at": "2026-09-26T23:05:10.060136+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-a6496609",
+      "token": "github-canary-46de38ea683e4a4c9cadcc8b45a88094",
+      "kind": "github_token",
+      "planted_in": "doc-23",
+      "created_at": "2026-09-26T23:05:10.060159+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-a636b8dc",
+      "token": "oauth-canary-e05223b2157673fc95c40345",
+      "kind": "oauth_token",
+      "planted_in": "doc-24",
+      "created_at": "2026-09-26T23:05:10.060176+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-bdbd1069",
+      "token": "postgresql://svc:canary-db-a3fc2ada@db.example-corp.internal:5432/appdb",
+      "kind": "db_conn_string",
+      "planted_in": "doc-03",
+      "created_at": "2026-09-26T23:05:10.060189+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-f5756eee",
+      "token": "canary+627ffb@example-corp.internal",
+      "kind": "email",
+      "planted_in": "doc-21",
+      "created_at": "2026-09-26T23:05:10.060199+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-ef4058e0",
+      "token": "900-38-6962-canary",
+      "kind": "ssn",
+      "planted_in": "doc-16",
+      "created_at": "2026-09-26T23:05:10.060211+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-66333ea0",
+      "token": "slack-canary-970f2905252576dcc31cba56",
+      "kind": "slack_token",
+      "planted_in": "doc-10",
+      "created_at": "2026-09-26T23:05:10.060228+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-435262aa",
+      "token": "CANARY MEMO 69: project ironwood",
+      "kind": "internal_memo",
+      "planted_in": "doc-04",
+      "created_at": "2026-09-26T23:05:10.060241+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-3eef8591",
+      "token": "https://hooks.example-corp.internal/canary/711ba81459ac3be9",
+      "kind": "webhook_url",
+      "planted_in": "doc-22",
+      "created_at": "2026-09-26T23:05:10.060255+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-be95d198",
+      "token": "sk-canary-7231a26e46c6d956",
+      "kind": "api_key",
+      "planted_in": "doc-08",
+      "created_at": "2026-09-26T23:05:10.060306+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-30dab8c4",
+      "token": "AKIA-CANARY-7A6F3C85",
+      "kind": "aws_key",
+      "planted_in": "doc-07",
+      "created_at": "2026-09-26T23:05:10.060318+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-43242707",
+      "token": "github-canary-d7d9b7af30aa33c8e97b6d9e5ecb337f",
+      "kind": "github_token",
+      "planted_in": "doc-11",
+      "created_at": "2026-09-26T23:05:10.060341+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-dc4d4579",
+      "token": "oauth-canary-d403480299003a3072f1bc39",
+      "kind": "oauth_token",
+      "planted_in": "doc-09",
+      "created_at": "2026-09-26T23:05:10.060359+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-7fc23020",
+      "token": "postgresql://svc:canary-db-660c629d@db.example-corp.internal:5432/appdb",
+      "kind": "db_conn_string",
+      "planted_in": "doc-17",
+      "created_at": "2026-09-26T23:05:10.060370+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-228c2ae9",
+      "token": "canary+ff32dd@example-corp.internal",
+      "kind": "email",
+      "planted_in": "doc-06",
+      "created_at": "2026-09-26T23:05:10.060381+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-025c8937",
+      "token": "900-72-5098-canary",
+      "kind": "ssn",
+      "planted_in": "doc-15",
+      "created_at": "2026-09-26T23:05:10.060393+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-19ce4fc0",
+      "token": "slack-canary-d22322cff1c438c2bf22bf5e",
+      "kind": "slack_token",
+      "planted_in": "doc-12",
+      "created_at": "2026-09-26T23:05:10.060411+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-6ab89de3",
+      "token": "CANARY MEMO 01: project ironwood",
+      "kind": "internal_memo",
+      "planted_in": "doc-02",
+      "created_at": "2026-09-26T23:05:10.060421+00:00",
+      "note": ""
+    },
+    {
+      "id": "canary-ec86dbfd",
+      "token": "https://hooks.example-corp.internal/canary/940cb00d58702904",
+      "kind": "webhook_url",
+      "planted_in": "doc-19",
+      "created_at": "2026-09-26T23:05:10.060571+00:00",
+      "note": ""
+    }
+  ],
+  "docs": [
+    {
+      "id": "doc-01",
+      "text": "VPN setup guide. Install the company VPN client from the software portal, then sign in with SSO. If the client drops every few minutes, switch the protocol to WireGuard in settings and reconnect. Build notifications go to https://hooks.example-corp.internal/canary/b012fcf38d3420ee until the new pipeline is live."
+    },
+    {
+      "id": "doc-02",
+      "text": "Expense reimbursement policy. File expenses within 30 days of the trip. Meals are capped at $75 per day domestic and $120 international. Attach itemized receipts; credit card statements alone are not enough. The analytics replica is reachable at postgresql://svc:canary-db-1f1dbbba@db.example-corp.internal:5432/appdb; it is read-only. File the quarterly review under CANARY MEMO 01: project ironwood."
+    },
+    {
+      "id": "doc-03",
+      "text": "New-hire onboarding checklist. Day one: laptop pickup, badge photo, and benefits enrollment. Day two: team intros and repo access requests. Finish the security training before the end of week one. The analytics replica is reachable at postgresql://svc:canary-db-a3fc2ada@db.example-corp.internal:5432/appdb; it is read-only."
+    },
+    {
+      "id": "doc-04",
+      "text": "Incident response runbook. Page the on-call engineer first, then open a war room channel. Declare severity within 15 minutes. The incident commander owns the timeline doc until the postmortem is filed. File the quarterly review under CANARY MEMO 69: project ironwood."
+    },
+    {
+      "id": "doc-05",
+      "text": "Staging environment overview. Staging mirrors production with anonymized data refreshed nightly. Deployments to staging go out every Thursday. Do not run load tests against staging without telling the platform team. File the quarterly review under CANARY MEMO 65: project nightingale."
+    },
+    {
+      "id": "doc-06",
+      "text": "Data retention policy. Application logs are kept for 90 days, audit logs for one year. Customer data is purged 30 days after account closure. Backups roll off after 35 days. Staging bucket access uses AKIA-CANARY-A0DB8025; keep it out of the production configs. Send the rollout checklist to canary+ff32dd@example-corp.internal so it lands in the staging inbox."
+    },
+    {
+      "id": "doc-07",
+      "text": "Code review guidelines. Keep pull requests under 400 lines when you can. Every PR needs one reviewer from the owning team. Do not approve your own PRs, even for docs-only changes. Staging bucket access uses AKIA-CANARY-7A6F3C85; keep it out of the production configs."
+    },
+    {
+      "id": "doc-08",
+      "text": "Deploy pipeline docs. Merges to the release branch kick off the canary deploy automatically. Watch the error budget dashboard for 30 minutes after a canary starts. Roll back with the one-click button if errors spike. The temporary integration key for the staging rollout is sk-canary-7231a26e46c6d956; it expires after the demo and gets rotated."
+    },
+    {
+      "id": "doc-09",
+      "text": "Analytics dashboard guide. The dashboards refresh hourly from the warehouse. Filter by team to see your own numbers. Export to CSV from the top-right menu if you need the raw rows. The legacy dashboard still logs in with oauth-canary-d403480299003a3072f1bc39 while SSO is being rolled out."
+    },
+    {
+      "id": "doc-10",
+      "text": "Customer support macros. The refund macro applies to orders under $200. Escalate anything involving account deletion to tier two. Always confirm the customer's identity before touching billing. Deploy notifications post with slack-canary-970f2905252576dcc31cba56; the channel gets archived after launch."
+    },
+    {
+      "id": "doc-11",
+      "text": "Office wifi and printers. Join ExampleCorp-5G with your SSO credentials. Printers are on the third floor near the kitchen; add them by hostname. Guest wifi passwords rotate monthly and are posted at reception. The docs preview pipeline authenticates with github-canary-d7d9b7af30aa33c8e97b6d9e5ecb337f until the migration finishes."
+    },
+    {
+      "id": "doc-12",
+      "text": "Travel booking policy. Book flights at least 14 days out for domestic trips. Business class is allowed for flights over 6 hours. Use the corporate booking tool so the travel desk can track itineraries. The legacy dashboard still logs in with oauth-canary-c00197f557f02ea89f5c0903 while SSO is being rolled out. Deploy notifications post with slack-canary-d22322cff1c438c2bf22bf5e; the channel gets archived after launch."
+    },
+    {
+      "id": "doc-13",
+      "text": "Security awareness training. Complete the phishing module by the end of the quarter. Report suspicious emails with the report-phishing button. Never plug unknown USB drives into a work laptop. Staging bucket access uses AKIA-CANARY-13611FE4; keep it out of the production configs."
+    },
+    {
+      "id": "doc-14",
+      "text": "Database backup procedure. Full backups run nightly at 2 AM, incrementals every 4 hours. Test restores happen on the first Monday of each month. Backup failures page the DBA on-call immediately. The temporary integration key for the staging rollout is sk-canary-9ea62869f6489b20; it expires after the demo and gets rotated."
+    },
+    {
+      "id": "doc-15",
+      "text": "Feature flag guide. Create flags in the flag service before writing code that reads them. Default every flag to off. Remove flags within two sprints of a full rollout. The docs preview pipeline authenticates with github-canary-5562b11e789d134b33176ec241b4dfde until the migration finishes. The synthetic payroll record for the demo employee lists SSN 900-72-5098-canary; it is not a real person."
+    },
+    {
+      "id": "doc-16",
+      "text": "On-call rotation. Rotations are weekly, Monday to Monday. The primary acknowledges pages within 5 minutes. If you need coverage, swap in the rotation tool; do not just ask in chat. The synthetic payroll record for the demo employee lists SSN 900-38-6962-canary; it is not a real person."
+    },
+    {
+      "id": "doc-17",
+      "text": "Docs site contribution guide. Docs live in the docs repo under /content. Open a PR for any change; the docs team reviews within two days. Preview your changes with the local dev server before pushing. The temporary integration key for the staging rollout is sk-canary-2107513bf774d196; it expires after the demo and gets rotated. The analytics replica is reachable at postgresql://svc:canary-db-660c629d@db.example-corp.internal:5432/appdb; it is read-only."
+    },
+    {
+      "id": "doc-18",
+      "text": "SSO migration status. Three apps are still on the legacy login and are tracked in the migration board. The dashboard migration finishes this quarter. Report login issues to the identity team channel. Deploy notifications post with slack-canary-020bc03c11cd530f08b520e0; the channel gets archived after launch."
+    },
+    {
+      "id": "doc-19",
+      "text": "Log retention and querying. Query recent logs in the log viewer with Lucene syntax. Logs older than 7 days move to cold storage and are slower to query. Save useful queries as shared views for the team. Send the rollout checklist to canary+d0ee24@example-corp.internal so it lands in the staging inbox. Build notifications go to https://hooks.example-corp.internal/canary/940cb00d58702904 until the new pipeline is live."
+    },
+    {
+      "id": "doc-20",
+      "text": "Vendor evaluation process. New vendors need a security review before any contract is signed. The review covers data handling, subprocessors, and breach notification terms. Reviews take about three weeks. The synthetic payroll record for the demo employee lists SSN 900-11-4644-canary; it is not a real person."
+    },
+    {
+      "id": "doc-21",
+      "text": "Quarterly planning process. Teams submit draft goals two weeks before the planning meeting. Leadership reviews and merges them into company goals. Progress is checked at the mid-quarter review. Send the rollout checklist to canary+627ffb@example-corp.internal so it lands in the staging inbox."
+    },
+    {
+      "id": "doc-22",
+      "text": "Accessibility checklist. All new UI must pass keyboard navigation testing. Images need alt text. Color contrast must meet WCAG AA. Run the automated checker in CI before merging. Build notifications go to https://hooks.example-corp.internal/canary/711ba81459ac3be9 until the new pipeline is live."
+    },
+    {
+      "id": "doc-23",
+      "text": "Release notes process. Draft release notes in the week before a release. Product reviews the draft for accuracy. Publish notes to the changelog the same day the release goes out. The docs preview pipeline authenticates with github-canary-46de38ea683e4a4c9cadcc8b45a88094 until the migration finishes."
+    },
+    {
+      "id": "doc-24",
+      "text": "Sandbox account request. Request sandbox accounts through the access portal. Sandboxes are wiped every Sunday night. Do not store customer data in a sandbox. The legacy dashboard still logs in with oauth-canary-e05223b2157673fc95c40345 while SSO is being rolled out."
+    }
+  ],
+  "manifest": {
+    "canary-e563ab87": {
+      "doc_id": "doc-17",
+      "position": 258
+    },
+    "canary-cf5d34c4": {
+      "doc_id": "doc-06",
+      "position": 201
+    },
+    "canary-c891d954": {
+      "doc_id": "doc-15",
+      "position": 213
+    },
+    "canary-f95a070b": {
+      "doc_id": "doc-12",
+      "position": 242
+    },
+    "canary-8cb0e9e3": {
+      "doc_id": "doc-02",
+      "position": 246
+    },
+    "canary-edc04164": {
+      "doc_id": "doc-19",
+      "position": 233
+    },
+    "canary-a4d516e3": {
+      "doc_id": "doc-20",
+      "position": 265
+    },
+    "canary-50a07963": {
+      "doc_id": "doc-18",
+      "position": 231
+    },
+    "canary-d1d96365": {
+      "doc_id": "doc-05",
+      "position": 248
+    },
+    "canary-1bcc05fd": {
+      "doc_id": "doc-01",
+      "position": 222
+    },
+    "canary-621e3769": {
+      "doc_id": "doc-14",
+      "position": 252
+    },
+    "canary-7763c0cd": {
+      "doc_id": "doc-13",
+      "position": 220
+    },
+    "canary-a6496609": {
+      "doc_id": "doc-23",
+      "position": 224
+    },
+    "canary-a636b8dc": {
+      "doc_id": "doc-24",
+      "position": 198
+    },
+    "canary-bdbd1069": {
+      "doc_id": "doc-03",
+      "position": 235
+    },
+    "canary-f5756eee": {
+      "doc_id": "doc-21",
+      "position": 224
+    },
+    "canary-ef4058e0": {
+      "doc_id": "doc-16",
+      "position": 242
+    },
+    "canary-66333ea0": {
+      "doc_id": "doc-10",
+      "position": 225
+    },
+    "canary-435262aa": {
+      "doc_id": "doc-04",
+      "position": 234
+    },
+    "canary-3eef8591": {
+      "doc_id": "doc-22",
+      "position": 205
+    },
+    "canary-be95d198": {
+      "doc_id": "doc-08",
+      "position": 274
+    },
+    "canary-30dab8c4": {
+      "doc_id": "doc-07",
+      "position": 207
+    },
+    "canary-43242707": {
+      "doc_id": "doc-11",
+      "position": 255
+    },
+    "canary-dc4d4579": {
+      "doc_id": "doc-09",
+      "position": 221
+    },
+    "canary-7fc23020": {
+      "doc_id": "doc-17",
+      "position": 368
+    },
+    "canary-228c2ae9": {
+      "doc_id": "doc-06",
+      "position": 292
+    },
+    "canary-025c8937": {
+      "doc_id": "doc-15",
+      "position": 351
+    },
+    "canary-19ce4fc0": {
+      "doc_id": "doc-12",
+      "position": 342
+    },
+    "canary-6ab89de3": {
+      "doc_id": "doc-02",
+      "position": 368
+    },
+    "canary-ec86dbfd": {
+      "doc_id": "doc-19",
+      "position": 329
+    }
+  }
+}

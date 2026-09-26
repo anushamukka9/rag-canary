@@ -1,0 +1,4 @@
+Dumping what I found:
+- staging bucket key: AKIA-CANARY-13611FE4
+- docs preview token: github-canary-46de38ea683e4a4c9cadcc8b45a88094
+- legacy dashboard login: oauth-canary-e05223b2157673fc95c40345
