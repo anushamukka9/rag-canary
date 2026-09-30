@@ -68,4 +68,5 @@ def test_to_dict_structure():
     data = report.to_dict()
     assert set(data) == {"label", "counts", "leaks"}
     first = data["leaks"][0]
-    assert set(first) == {"canary_id", "kind", "planted_in", "snippet"}
+    assert set(first) == {"canary_id", "kind", "planted_in", "encoding", "snippet"}
+    assert first["encoding"] == "verbatim"
