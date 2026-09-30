@@ -207,3 +207,174 @@ def test_version_synced_with_pyproject():
     pyproject = (root / "pyproject.toml").read_text()
     match = re.search(r'^version = "([^"]+)"', pyproject, re.M)
     assert match and match.group(1) == rag_canary.__version__
+
+
+def test_rotate_produces_fresh_set(tmp_path, capsys):
+    old = tmp_path / "old.json"
+    assert main(["generate", "-n", "6", "--seed", "4", "-o", str(old)]) == 0
+    new = tmp_path / "new.json"
+    rc = main(["rotate", "--old", str(old), "-n", "6", "--seed", "4", "-o", str(new)])
+    assert rc == 0
+    old_data = json.loads(old.read_text(encoding="utf-8"))
+    new_data = json.loads(new.read_text(encoding="utf-8"))
+    assert len(new_data) == 6
+    assert not ({c["token"] for c in new_data} & {c["token"] for c in old_data})
+    capsys.readouterr()
+
+
+def test_rotate_deterministic(tmp_path, capsys):
+    old = tmp_path / "old.json"
+    assert main(["generate", "-n", "4", "--seed", "4", "-o", str(old)]) == 0
+    capsys.readouterr()
+    assert main(["rotate", "--old", str(old), "-n", "4", "--seed", "8"]) == 0
+    first = json.loads(capsys.readouterr().out)
+    assert main(["rotate", "--old", str(old), "-n", "4", "--seed", "8"]) == 0
+    second = json.loads(capsys.readouterr().out)
+    assert [c["token"] for c in first] == [c["token"] for c in second]
+
+
+def test_rotate_missing_old_file_exits_2(tmp_path):
+    assert main(["rotate", "--old", str(tmp_path / "nope.json"), "-n", "4"]) == 2
+
+
+def test_verify_all_present_exit_0(tmp_path, capsys):
+    canaries = tmp_path / "canaries.json"
+    manifest = tmp_path / "manifest.json"
+    corpus = tmp_path / "corpus.jsonl"
+    corpus.write_text('{"id": "d1", "text": "Staging runbook."}\n', encoding="utf-8")
+    assert main(["generate", "-n", "4", "--seed", "51", "-o", str(canaries)]) == 0
+    planted = tmp_path / "planted.jsonl"
+    assert (
+        main(
+            [
+                "plant",
+                "--docs",
+                str(corpus),
+                "--canaries",
+                str(canaries),
+                "--manifest",
+                str(manifest),
+                "-o",
+                str(planted),
+            ]
+        )
+        == 0
+    )
+    rc = main(
+        [
+            "verify",
+            "--docs",
+            str(planted),
+            "--canaries",
+            str(canaries),
+            "--manifest",
+            str(manifest),
+        ]
+    )
+    assert rc == 0
+    assert "4/4" in capsys.readouterr().out
+
+
+def test_verify_missing_token_exit_1(tmp_path, capsys):
+    import re
+
+    canaries = tmp_path / "canaries.json"
+    manifest = tmp_path / "manifest.json"
+    corpus = tmp_path / "corpus.jsonl"
+    corpus.write_text('{"id": "d1", "text": "Staging runbook."}\n', encoding="utf-8")
+    assert main(["generate", "-n", "3", "--seed", "52", "-o", str(canaries)]) == 0
+    planted = tmp_path / "planted.jsonl"
+    assert (
+        main(
+            [
+                "plant",
+                "--docs",
+                str(corpus),
+                "--canaries",
+                str(canaries),
+                "--manifest",
+                str(manifest),
+                "-o",
+                str(planted),
+            ]
+        )
+        == 0
+    )
+    # Mangle the planted file: redact the first canary token.
+    data = json.loads(canaries.read_text(encoding="utf-8"))
+    text = planted.read_text(encoding="utf-8")
+    text = text.replace(data[0]["token"], "[REDACTED]", 1)
+    planted.write_text(text, encoding="utf-8")
+    rc = main(
+        [
+            "verify",
+            "--docs",
+            str(planted),
+            "--canaries",
+            str(canaries),
+            "--manifest",
+            str(manifest),
+        ]
+    )
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert re.search(r"FAILED.*1 canary", err)
+
+
+def test_verify_json_format(tmp_path, capsys):
+    canaries = tmp_path / "canaries.json"
+    manifest = tmp_path / "manifest.json"
+    corpus = tmp_path / "corpus.jsonl"
+    corpus.write_text('{"id": "d1", "text": "Staging runbook."}\n', encoding="utf-8")
+    assert main(["generate", "-n", "2", "--seed", "53", "-o", str(canaries)]) == 0
+    planted = tmp_path / "planted.jsonl"
+    assert (
+        main(
+            [
+                "plant",
+                "--docs",
+                str(corpus),
+                "--canaries",
+                str(canaries),
+                "--manifest",
+                str(manifest),
+                "-o",
+                str(planted),
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()  # drain plant/generate chatter so stdout holds only the report
+    rc = main(
+        [
+            "verify",
+            "--docs",
+            str(planted),
+            "--canaries",
+            str(canaries),
+            "--manifest",
+            str(manifest),
+            "--format",
+            "json",
+        ]
+    )
+    assert rc == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["checked"] == 2 and payload["found"] == 2
+
+
+def test_scan_encoded_flag(tmp_path, capsys):
+    import base64
+
+    canaries = tmp_path / "canaries.json"
+    assert main(["generate", "-n", "3", "--seed", "61", "-o", str(canaries)]) == 0
+    capsys.readouterr()
+    data = json.loads(canaries.read_text(encoding="utf-8"))
+    target = tmp_path / "out.txt"
+    target.write_text(base64.b64encode(data[1]["token"].encode()).decode(), encoding="utf-8")
+    rc = main(["scan", "--canaries", str(canaries), "--encoded", str(target)])
+    assert rc == 1
+    out = capsys.readouterr().out
+    assert "base64-encoded" in out
+    # Without the flag the same file is clean.
+    assert main(["scan", "--canaries", str(canaries), str(target)]) == 0
