@@ -5,11 +5,11 @@ from datetime import datetime
 
 import pytest
 
-from rag_canary import CANARY_KINDS, Canary, generate_canaries
+from rag_canary import CANARY_KINDS, Canary, generate_canaries, rotate_canaries
 
 
-def test_all_ten_kinds_generated_by_default():
-    canaries = generate_canaries(10)
+def test_all_kinds_generated_by_default():
+    canaries = generate_canaries(len(CANARY_KINDS))
     assert sorted({c.kind for c in canaries}) == sorted(CANARY_KINDS)
 
 
@@ -20,7 +20,7 @@ def test_kind_subset():
 
 
 def test_kind_subset_round_robin():
-    canaries = generate_canaries(20)
+    canaries = generate_canaries(len(CANARY_KINDS) * 2)
     counts = {kind: 0 for kind in CANARY_KINDS}
     for c in canaries:
         counts[c.kind] += 1
@@ -137,3 +137,68 @@ def test_token_shapes_spot_check():
     assert canaries["webhook_url"].token.startswith("https://hooks.example-corp.internal/canary/")
     assert canaries["db_conn_string"].token.startswith("postgresql://")
     assert "CANARY MEMO" in canaries["internal_memo"].token
+
+
+def test_jwt_token_shape():
+    canaries = generate_canaries(5, kinds=["jwt_token"], seed=42)
+    for c in canaries:
+        parts = c.token.split(".")
+        assert len(parts) == 3, c.token
+        assert parts[0] == "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+        assert parts[2].startswith("canary-sig-")
+
+
+def test_credit_card_shape():
+    canaries = generate_canaries(5, kinds=["credit_card"], seed=42)
+    for c in canaries:
+        assert re.fullmatch(r"4111-canary-1111-\d{4}", c.token), c.token
+        assert not c.token.replace("-", "").isdigit()
+
+
+def test_private_key_shape():
+    canaries = generate_canaries(5, kinds=["private_key"], seed=42)
+    for c in canaries:
+        lines = c.token.splitlines()
+        assert lines[0] == "-----BEGIN CANARY PRIVATE KEY-----"
+        assert lines[-1] == "-----END CANARY PRIVATE KEY-----"
+        assert len(lines) == 6
+
+
+def test_new_kinds_have_plant_sentences_and_labels():
+    from rag_canary.plant import _DEDICATED_LABELS, _INLINE_SENTENCES
+
+    for kind in ("jwt_token", "credit_card", "private_key"):
+        assert kind in _INLINE_SENTENCES
+        assert kind in _DEDICATED_LABELS
+
+
+def test_thirteen_kinds_total():
+    assert len(CANARY_KINDS) == 13
+
+
+def test_rotate_canaries_avoids_old_tokens():
+    old = generate_canaries(20, seed=1)
+    fresh = rotate_canaries(old, 10, seed=1)
+    assert len(fresh) == 10
+    old_tokens = {c.token for c in old}
+    assert not ({c.token for c in fresh} & old_tokens)
+    assert len({c.token for c in fresh}) == 10
+
+
+def test_rotate_canaries_deterministic():
+    old = generate_canaries(10, seed=5)
+    first = rotate_canaries(old, 8, seed=9)
+    second = rotate_canaries(old, 8, seed=9)
+    assert [c.token for c in first] == [c.token for c in second]
+
+
+def test_rotate_canaries_n_must_be_positive():
+    old = generate_canaries(5, seed=1)
+    with pytest.raises(ValueError, match="at least 1"):
+        rotate_canaries(old, 0)
+
+
+def test_rotate_canaries_rejects_unknown_kind():
+    old = generate_canaries(5, seed=1)
+    with pytest.raises(ValueError, match="unknown canary kinds"):
+        rotate_canaries(old, 5, kinds=["bogus"])
