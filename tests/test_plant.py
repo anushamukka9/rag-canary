@@ -143,3 +143,22 @@ def test_inline_appends_natural_sentence():
     planted, _ = plant_canaries(docs, canaries, strategy="inline")
     assert planted[0]["text"].startswith("Staging notes. ")
     assert canaries[0].token in planted[0]["text"]
+
+
+def test_inline_plants_new_kinds():
+    docs = [{"id": "doc-1", "text": "Staging notes."}]
+    canaries = generate_canaries(3, kinds=["jwt_token", "credit_card", "private_key"], seed=3)
+    planted, manifest = plant_canaries(docs, canaries, strategy="inline")
+    assert len(manifest) == 3
+    for canary in canaries:
+        entry = manifest[canary.id]
+        pos = entry["position"]
+        assert planted[0]["text"][pos : pos + len(canary.token)] == canary.token
+
+
+def test_dedicated_plants_new_kinds():
+    canaries = generate_canaries(3, kinds=["jwt_token", "credit_card", "private_key"], seed=3)
+    planted, manifest = plant_canaries([], canaries, strategy="dedicated")
+    assert len(planted) == 1
+    for canary in canaries:
+        assert canary.token in planted[0]["text"]
