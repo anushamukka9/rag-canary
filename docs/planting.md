@@ -74,3 +74,21 @@ corpus. It is the map of your tripwires.
 - **Do not over-plant.** A handful of canaries per document is plenty.
   Hundreds of them train your own team to ignore the alerts, which is
   canary fatigue, and it is how real tripwires die.
+
+## Verify the tripwire
+
+Planting is done, but did the tokens survive? Run the integrity check
+after planting and after any pipeline change that touches document
+text:
+
+```python
+from rag_canary import verify_planted
+
+report = verify_planted(planted_docs, canaries, manifest)
+print(report.summary())  # "verify: 30/30 canaries present"
+```
+
+The CLI wraps it as `rag-canary verify` (exit 0 all present, exit 1
+with the missing ones named). This is the same check that gates CI;
+see [ci-usage.md](ci-usage.md). Make it a habit: a canary that did not
+survive planting is a tripwire that will never trip.
