@@ -1,6 +1,6 @@
 # Canary kinds
 
-Ten kinds, one rule: every token contains the literal marker `canary`
+Thirteen kinds, one rule: every token contains the literal marker `canary`
 (case-insensitive). That marker is the entire safety story. No real
 credential contains it, so a canary can never be confused with one, by a
 person or by a scanner.
@@ -17,6 +17,9 @@ person or by a scanner.
 | `slack_token` | `slack-canary-<24 hex>` | Deliberately not `xoxb-`; that prefix trips GitHub push protection |
 | `internal_memo` | `CANARY MEMO <2 digits>: project <codeword>` | Plainly labeled; reads like a filing reference |
 | `webhook_url` | `https://hooks.example-corp.internal/canary/<16 hex>` | Reserved host; marker in the path |
+| `jwt_token` | `<jwt header>.<base64url payload>.canary-sig-<16 hex>` | The signature segment is literally `canary-sig-...`; no JWT parser validates it |
+| `credit_card` | `4111-canary-1111-<4 digits>` | Non-digit `canary` segment; can never be a real PAN |
+| `private_key` | `-----BEGIN CANARY PRIVATE KEY-----` multiline block | `CANARY` in the armor headers; no PEM parser accepts it |
 
 A few design notes:
 
@@ -32,6 +35,10 @@ A few design notes:
 - **Hosts stay in `.internal`.** Connection strings and webhook URLs point
   at `example-corp.internal`, a reserved-style domain that does not resolve.
   A leaked canary URL is a dead end.
+- **The private key is multiline on purpose.** The 4-line hex body
+  exercises your chunker across line breaks: if your pipeline splits on
+  newlines, the token still has to survive. Run `rag-canary verify`
+  after any chunking change; a split token is a dead tripwire.
 
 ## Adding a kind
 
