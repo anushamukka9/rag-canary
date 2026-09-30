@@ -34,6 +34,26 @@ surrounding text so you can see how it leaked.
 `scan_files` reads files as UTF-8 with replacement for undecodable bytes,
 so messy logs do not crash the scan.
 
+## Encoded exfiltration
+
+An attacker who base64- or hex-encodes the stolen text defeats plain
+substring matching. Pass `detect_encoded=True` (or `scan --encoded`) and
+the scanner also looks for each token in its base64 (padded and
+unpadded) and hex (lower- and uppercase) forms:
+
+```python
+leaks = scan_text(model_output, canaries, detect_encoded=True)
+for leak in leaks:
+    print(leak.canary_id, leak.encoding)  # "verbatim", "base64", or "hex"
+```
+
+The encoded forms are long and random-looking, so this stays as safe as
+verbatim matching. Reports mark non-verbatim hits: the table view shows
+`[base64-encoded]`, the Markdown report suffixes the heading
+(`## canary-... (aws_key) (base64-encoded)`), and the JSON dict carries
+an `encoding` field. Turn it on whenever your threat model includes an
+attacker who would bother to encode.
+
 ## Reports
 
 `LeakReport` gives you counts (leaks, distinct canaries hit, kinds hit,
@@ -53,8 +73,9 @@ building. See [ci-usage](ci-usage.md) for the CI pattern.
 
 ## What scanning cannot do
 
-Substring matching finds verbatim copies. It does not find a token the
-attacker paraphrased around, stripped out, or base64-encoded. If your
-threat model includes an attacker who knows the canary scheme, pair this
-with output inspection that does not depend on exact tokens. Read the
-honest limitations in the README before you trust a clean scan.
+Substring matching finds verbatim copies; with `detect_encoded` it also
+finds base64- and hex-encoded copies. It does not find a token the
+attacker paraphrased around, stripped out, or encrypted. If your threat
+model includes an attacker who knows the canary scheme, pair this with
+output inspection that does not depend on exact tokens. Read the honest
+limitations in the README before you trust a clean scan.
