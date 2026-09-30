@@ -12,7 +12,7 @@ once, and scan the previous day's model outputs or logs:
 - name: Scan yesterday's outputs for canary leaks
   run: |
     pip install rag-canary
-    rag-canary scan --canaries canaries.json --format json outputs/*.log > leak-report.json
+    rag-canary scan --canaries canaries.json --encoded --format json outputs/*.log > leak-report.json
 
 - name: Upload leak report
   if: always()
@@ -26,6 +26,26 @@ once, and scan the previous day's model outputs or logs:
 That is the point: a tripped canary should be loud. Wire the failure to
 your alerting (PagerDuty, Slack, email) rather than letting it sit as a
 red check nobody reads.
+
+## Verify the tripwire after planting
+
+A canary that did not survive planting is a tripwire that will never
+trip. Gate every corpus rebuild on the integrity check:
+
+```yaml
+- name: Verify canaries survived planting
+  run: |
+    pip install rag-canary
+    rag-canary plant --docs corpus.jsonl --canaries canaries.json \
+      --seed 42 --manifest manifest.json -o planted.jsonl
+    rag-canary verify --docs planted.jsonl --canaries canaries.json \
+      --manifest manifest.json
+```
+
+`rag-canary verify` exits 0 when every token is present and 1 with the
+missing ones named (mangled token, deleted document, or no planting
+location recorded). This catches chunker regressions and dedup passes
+that silently ate your tokens.
 
 ## Gate a corpus change
 
