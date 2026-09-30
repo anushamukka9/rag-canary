@@ -1,4 +1,4 @@
-"""Command-line interface: rag-canary generate|plant|scan"""
+"""Command-line interface: rag-canary generate|plant|scan|verify|rotate"""
 
 from __future__ import annotations
 
@@ -7,10 +7,11 @@ import json
 import sys
 from pathlib import Path
 
-from . import __version__, generate_canaries, plant_canaries
+from . import __version__, generate_canaries, plant_canaries, rotate_canaries, verify_planted
 from .canary import CANARY_KINDS, Canary
 from .report import LeakReport
 from .scan import scan_text
+from .verify import VerifyReport
 
 
 def _read_canaries(path: str) -> list[Canary]:
@@ -115,7 +116,8 @@ def _format_scan_table(by_file: dict[str, list]) -> str:
         lines.append(f"{filename}: {len(leaks)} leak(s)")
         for leak in leaks:
             where = leak.planted_in or "unknown doc"
-            lines.append(f"  [{leak.kind}] {leak.canary_id} (planted in {where})")
+            encoded = f" [{leak.encoding}-encoded]" if leak.encoding != "verbatim" else ""
+            lines.append(f"  [{leak.kind}]{encoded} {leak.canary_id} (planted in {where})")
             lines.append(f"    > {leak.snippet[:120]}")
     return "\n".join(lines)
 
@@ -134,7 +136,7 @@ def cmd_scan(args: argparse.Namespace) -> int:
         except OSError as exc:
             print(f"error: cannot read {path}: {exc}", file=sys.stderr)
             return 2
-        by_file[path] = scan_text(text, canaries)
+        by_file[path] = scan_text(text, canaries, detect_encoded=args.encoded)
 
     label = args.label or ", ".join(args.files)
     report = LeakReport(
@@ -157,6 +159,55 @@ def cmd_scan(args: argparse.Namespace) -> int:
     return 0
 
 
+def _read_manifest(path: str | None) -> dict:
+    if not path:
+        return {}
+    with open(path, encoding="utf-8") as fh:
+        data = json.load(fh)
+    if not isinstance(data, dict):
+        raise ValueError("manifest file must be a JSON object")
+    return data
+
+
+def cmd_verify(args: argparse.Namespace) -> int:
+    try:
+        docs = _read_docs(args.docs)
+        canaries = _read_canaries(args.canaries)
+        manifest = _read_manifest(args.manifest)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"error: cannot read input: {exc}", file=sys.stderr)
+        return 2
+    report: VerifyReport = verify_planted(docs, canaries, manifest)
+    if args.format == "json":
+        print(report.to_json())
+    else:
+        print(report.summary())
+    if not report.ok():
+        print(
+            f"\nFAILED: {len(report.missing)} canary(ies) missing from the corpus.",
+            file=sys.stderr,
+        )
+        return 1
+    return 0
+
+
+def cmd_rotate(args: argparse.Namespace) -> int:
+    try:
+        old_canaries = _read_canaries(args.old)
+        kinds = _parse_kinds(args.kinds)
+        canaries = rotate_canaries(old_canaries, args.count, kinds=kinds, seed=args.seed)
+    except (OSError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    payload = json.dumps([c.to_dict() for c in canaries], indent=2)
+    if args.output:
+        Path(args.output).write_text(payload + "\n", encoding="utf-8")
+        print(f"wrote {len(canaries)} fresh canaries to {args.output}")
+    else:
+        print(payload)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="rag-canary",
@@ -170,13 +221,29 @@ def build_parser() -> argparse.ArgumentParser:
     gen.add_argument(
         "--kinds",
         default=None,
-        help="Comma-separated subset of canary kinds (default: all ten).",
+        help="Comma-separated subset of canary kinds (default: all kinds).",
     )
     gen.add_argument("--seed", type=int, default=None, help="Seed for deterministic output.")
     gen.add_argument(
         "-o", "--output", default=None, help="Write canaries JSON here (default: stdout)."
     )
     gen.set_defaults(func=cmd_generate)
+
+    rot = sub.add_parser(
+        "rotate", help="Generate fresh canaries that do not reuse an old set's tokens."
+    )
+    rot.add_argument("--old", required=True, help="Old canaries JSON to rotate away from.")
+    rot.add_argument("-n", "--count", type=int, default=10, help="How many canaries (default: 10).")
+    rot.add_argument(
+        "--kinds",
+        default=None,
+        help="Comma-separated subset of canary kinds (default: all kinds).",
+    )
+    rot.add_argument("--seed", type=int, default=None, help="Seed for deterministic output.")
+    rot.add_argument(
+        "-o", "--output", default=None, help="Write canaries JSON here (default: stdout)."
+    )
+    rot.set_defaults(func=cmd_rotate)
 
     plant = sub.add_parser("plant", help="Plant canaries into documents.")
     plant.add_argument(
@@ -210,8 +277,28 @@ def build_parser() -> argparse.ArgumentParser:
         default="table",
         help="Output format (default: table).",
     )
+    scan.add_argument(
+        "--encoded",
+        action="store_true",
+        help="Also detect tokens hidden behind base64 or hex encoding.",
+    )
     scan.add_argument("--label", default=None, help="Label for the report.")
     scan.set_defaults(func=cmd_scan)
+
+    verify = sub.add_parser("verify", help="Check that planted canaries survived in the corpus.")
+    verify.add_argument(
+        "--docs", required=True, help="Planted corpus: JSONL or JSON list of {id, text}."
+    )
+    verify.add_argument("--canaries", required=True, help="Canaries JSON from `generate`.")
+    verify.add_argument(
+        "--manifest",
+        default=None,
+        help="Manifest JSON from `plant`; used when canaries lack planted_in.",
+    )
+    verify.add_argument(
+        "--format", choices=["table", "json"], default="table", help="Output format."
+    )
+    verify.set_defaults(func=cmd_verify)
     return parser
 
 
