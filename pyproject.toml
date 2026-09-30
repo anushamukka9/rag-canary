@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rag-canary"
-version = "0.1.0"
+version = "0.2.0"
 description = "Canary tokens for RAG corpora: plant fake secrets in your documents so exfiltration via prompt injection trips the wire. Detection, not prevention."
 readme = "README.md"
 license = { text = "MIT" }
