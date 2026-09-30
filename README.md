@@ -40,7 +40,11 @@ $ rag-canary plant --docs corpus.jsonl --canaries canaries.json --seed 42 \
 wrote 24 planted docs to planted.jsonl
 wrote manifest (10 canaries) to manifest.json
 
-$ rag-canary scan --canaries canaries.json --manifest manifest.json model-output.txt
+$ rag-canary verify --docs planted.jsonl --canaries canaries.json --manifest manifest.json
+verify: 10/10 canaries present
+All planted canaries survived. The tripwire is live.
+
+$ rag-canary scan --canaries canaries.json --manifest manifest.json --encoded model-output.txt
 
 rag-canary scan: 1 file(s), 2 leak(s)
 
@@ -72,14 +76,25 @@ report = LeakReport(leaks=leaks, label="2026-09-26 nightly")
 print(report.to_markdown())
 ```
 
+Rotate the set when it may have been seen (after an incident, after a
+shared benchmark run, or on a schedule). The fresh tokens are
+guaranteed not to reuse the old set:
+
+```bash
+$ rag-canary rotate --old canaries.json -n 10 --seed 77 -o canaries-v2.json
+wrote 10 fresh canaries to canaries-v2.json
+```
+
 Try the bundled examples: `examples/sample_corpus.jsonl` (a small demo
-corpus), `examples/plant_example.py` (plant and inspect), and
+corpus), `examples/plant_example.py` (plant and inspect),
 `examples/scan_example.py` (a simulated exfiltration and the scan that
-catches it).
+catches it), and `examples/plant_detect_walkthrough.py` (the full
+plant-verify-attack-detect loop, including a base64-encoded
+exfiltration).
 
 ## Canary kinds
 
-Ten kinds, one rule: every token contains the literal marker `canary`.
+Thirteen kinds, one rule: every token contains the literal marker `canary`.
 Shapes are close to the real thing so they survive being copied into
 attacker output, but they break every partner pattern I know about.
 
@@ -95,11 +110,16 @@ attacker output, but they break every partner pattern I know about.
 | `slack_token` | `slack-canary-<hex>` (never `xoxb-`; that trips push protection) |
 | `internal_memo` | `CANARY MEMO <n>: project <codeword>` |
 | `webhook_url` | `https://hooks.example-corp.internal/canary/<hex>` |
+| `jwt_token` | `<jwt header>.<payload>.canary-sig-<hex>` (signature is literally `canary-sig-...`) |
+| `credit_card` | `4111-canary-1111-<digits>` (non-digit segment; never a real PAN) |
+| `private_key` | Multiline `-----BEGIN CANARY PRIVATE KEY-----` block (exercises your chunker) |
 
 See [docs/canary-kinds.md](docs/canary-kinds.md) for the full safety notes.
 Planting strategies and the manifest are documented in
 [docs/planting.md](docs/planting.md); scanning in
-[docs/scanning.md](docs/scanning.md).
+[docs/scanning.md](docs/scanning.md); the design playbook (kind
+selection, density, rotation, secrecy) in
+[docs/design.md](docs/design.md).
 
 ## Benchmarks
 
@@ -140,19 +160,23 @@ including a manifest-stability gate for corpus PRs.
 - Canaries detect; they never prevent. The document still left. The
   canary just tells you which one.
 - An attacker who knows the scheme can strip the markers or paraphrase
-  around them. Secrecy of the canary set is load-bearing; rotate it.
-- Base64 or otherwise encoded exfiltration evades substring matching.
-  This scanner finds verbatim copies, nothing cleverer.
+  around them. Secrecy of the canary set is load-bearing; rotate it
+  (`rag-canary rotate` generates a fresh set that does not reuse old
+  tokens).
+- Encoded exfiltration is caught only with encoded detection on
+  (`scan --encoded` / `detect_encoded=True` finds base64 and hex
+  variants). Without the flag, the scanner finds verbatim copies,
+  nothing cleverer.
 - You only catch what you scan. Output and log coverage is the real
   work; the scanner is the easy part.
 - Planting is string surgery and does not know your chunker. Verify the
-  token survives chunking before you rely on it.
+  token survives chunking before you rely on it (`rag-canary verify`
+  checks every token is still findable after planting).
 - Do not over-plant. Hundreds of canaries train your own team to ignore
   the alerts, and that is how tripwires die.
 
 ## Roadmap
 
-- Encoded-exfil detection (base64 and hex variants of planted tokens)
 - Chunk-aware planting that verifies token survival through a chunker
 - A hosted canary-set vault with rotation reminders
 - Larger, community-sourced attack fixture sets
