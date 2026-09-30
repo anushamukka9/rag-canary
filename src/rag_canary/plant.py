@@ -51,6 +51,11 @@ _INLINE_SENTENCES = {
     ),
     "internal_memo": "File the quarterly review under {token}.",
     "webhook_url": ("Build notifications go to {token} until the new pipeline is live."),
+    "jwt_token": ("The staging service authenticates with {token}; the signature is a dummy."),
+    "credit_card": ("The demo checkout uses test card {token}; it cannot be charged."),
+    "private_key": (
+        "The sandbox signs nightly artifacts with:\n{token}\nRotate it before go-live."
+    ),
 }
 
 _DEDICATED_LABELS = {
@@ -64,6 +69,9 @@ _DEDICATED_LABELS = {
     "slack_token": "Deploy notifier token",
     "internal_memo": "Filing reference",
     "webhook_url": "Build webhook",
+    "jwt_token": "Staging service JWT",
+    "credit_card": "Demo test card",
+    "private_key": "Sandbox signing key",
 }
 
 _DEDICATED_BATCH_SIZE = 4
