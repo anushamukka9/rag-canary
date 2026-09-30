@@ -41,6 +41,7 @@ class LeakReport:
                     "canary_id": leak.canary_id,
                     "kind": leak.kind,
                     "planted_in": leak.planted_in,
+                    "encoding": leak.encoding,
                     "snippet": leak.snippet,
                 }
                 for leak in self.leaks
@@ -68,7 +69,9 @@ class LeakReport:
                 where = f"planted in `{first.planted_in}`"
             else:
                 where = "planting location unknown"
-            lines.append(f"## {canary_id} ({first.kind})")
+            encodings = sorted({hit.encoding for hit in hits if hit.encoding != "verbatim"})
+            suffix = f" ({', '.join(encodings)}-encoded)" if encodings else ""
+            lines.append(f"## {canary_id} ({first.kind}){suffix}")
             lines.append(f"{where} - {len(hits)} hit(s)")
             lines.append("")
             for hit in hits:
