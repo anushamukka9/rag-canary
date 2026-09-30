@@ -104,3 +104,81 @@ def test_scan_reports_planted_in_from_manifest():
     leaks = scan_text(planted[0]["text"], canaries)
     assert len(leaks) == 6
     assert {leak.planted_in for leak in leaks} == {"runbook"}
+
+
+def test_scan_encoded_off_by_default():
+    import base64
+
+    canaries = _planted_canaries()
+    encoded = base64.b64encode(canaries[0].token.encode()).decode()
+    assert scan_text(f"hidden: {encoded}", canaries) == []
+
+
+def test_scan_detects_base64_encoded_token():
+    import base64
+
+    canaries = _planted_canaries()
+    encoded = base64.b64encode(canaries[0].token.encode()).decode()
+    leaks = scan_text(f"hidden: {encoded}", canaries, detect_encoded=True)
+    assert len(leaks) == 1
+    assert leaks[0].canary_id == canaries[0].id
+    assert leaks[0].encoding == "base64"
+
+
+def test_scan_detects_unpadded_base64():
+    import base64
+
+    canaries = generate_canaries(4, seed=77)
+    encoded = base64.b64encode(canaries[2].token.encode()).decode().rstrip("=")
+    leaks = scan_text(encoded, canaries, detect_encoded=True)
+    assert len(leaks) == 1
+    assert leaks[0].encoding == "base64"
+
+
+def test_scan_detects_hex_encoded_token():
+    canaries = _planted_canaries()
+    encoded = canaries[1].token.encode().hex()
+    leaks = scan_text(f"hex dump {encoded} end", canaries, detect_encoded=True)
+    assert len(leaks) == 1
+    assert leaks[0].canary_id == canaries[1].id
+    assert leaks[0].encoding == "hex"
+
+
+def test_scan_verbatim_takes_precedence_over_encoded():
+    import base64
+
+    canaries = _planted_canaries()
+    encoded = base64.b64encode(canaries[0].token.encode()).decode()
+    text = f"{canaries[0].token} and also {encoded}"
+    leaks = scan_text(text, canaries, detect_encoded=True)
+    assert len(leaks) == 1
+    assert leaks[0].encoding == "verbatim"
+
+
+def test_scan_encoded_reports_first_occurrence_only():
+    import base64
+
+    canaries = _planted_canaries()
+    encoded = base64.b64encode(canaries[3].token.encode()).decode()
+    leaks = scan_text(f"{encoded} ... {encoded}", canaries, detect_encoded=True)
+    assert len(leaks) == 1
+
+
+def test_scan_files_detect_encoded(tmp_path):
+    import base64
+
+    canaries = _planted_canaries()
+    target = tmp_path / "out.txt"
+    target.write_text(base64.b64encode(canaries[2].token.encode()).decode(), encoding="utf-8")
+    leaks = scan_files([str(target)], canaries, detect_encoded=True)
+    assert len(leaks) == 1
+    assert leaks[0].encoding == "base64"
+
+
+def test_scan_multiline_private_key():
+    canaries = generate_canaries(3, kinds=["private_key"], seed=99)
+    docs = [{"id": "doc-1", "text": "Signing notes."}]
+    planted, _ = plant_canaries(docs, canaries, strategy="inline")
+    leaks = scan_text(planted[0]["text"], canaries)
+    assert len(leaks) == 3
+    assert all(leak.encoding == "verbatim" for leak in leaks)
