@@ -88,9 +88,11 @@ wrote 10 fresh canaries to canaries-v2.json
 Try the bundled examples: `examples/sample_corpus.jsonl` (a small demo
 corpus), `examples/plant_example.py` (plant and inspect),
 `examples/scan_example.py` (a simulated exfiltration and the scan that
-catches it), and `examples/plant_detect_walkthrough.py` (the full
+catches it), `examples/plant_detect_walkthrough.py` (the full
 plant-verify-attack-detect loop, including a base64-encoded
-exfiltration).
+exfiltration), and `examples/attack-simulation/` (a runnable demo RAG
+you attack end to end: scripted prompt injections, the tripwire firing,
+and a shareable attack log).
 
 ## Canary kinds
 
