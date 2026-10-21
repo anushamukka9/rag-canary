@@ -27,20 +27,23 @@ Quickstart:
 from .canary import CANARY_KINDS, Canary, generate_canaries, rotate_canaries
 from .plant import plant_canaries
 from .report import LeakReport
+from .rotation import RotationStatus, rotation_status
 from .scan import Leak, scan_files, scan_text
 from .verify import VerifyReport, verify_planted
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "CANARY_KINDS",
     "Canary",
     "Leak",
     "LeakReport",
+    "RotationStatus",
     "VerifyReport",
     "generate_canaries",
     "plant_canaries",
     "rotate_canaries",
+    "rotation_status",
     "scan_files",
     "scan_text",
     "verify_planted",

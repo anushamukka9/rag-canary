@@ -56,6 +56,16 @@ _INLINE_SENTENCES = {
     "private_key": (
         "The sandbox signs nightly artifacts with:\n{token}\nRotate it before go-live."
     ),
+    "oauth_refresh_token": (
+        "The legacy dashboard refreshes its session with {token}; it outlives the access token."
+    ),
+    "mysql_conn_string": ("The reporting replica is reachable at {token}; it is read-only."),
+    "mongodb_conn_string": ("Session data for the demo lives at {token}; it is a sandbox cluster."),
+    "redis_conn_string": ("The staging cache is at {token}; flush it whenever you like."),
+    "tracked_memo": "File the vendor review under {token} so records can find it later.",
+    "aws_secret_key": (
+        "Staging uploads sign with secret key {token}; keep it next to the access key, not in git."
+    ),
 }
 
 _DEDICATED_LABELS = {
@@ -72,6 +82,12 @@ _DEDICATED_LABELS = {
     "jwt_token": "Staging service JWT",
     "credit_card": "Demo test card",
     "private_key": "Sandbox signing key",
+    "oauth_refresh_token": "Legacy dashboard refresh token",
+    "mysql_conn_string": "Reporting replica",
+    "mongodb_conn_string": "Demo session store",
+    "redis_conn_string": "Staging cache",
+    "tracked_memo": "Tracked filing reference",
+    "aws_secret_key": "Staging AWS secret key",
 }
 
 _DEDICATED_BATCH_SIZE = 4

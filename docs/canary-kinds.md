@@ -1,6 +1,6 @@
 # Canary kinds
 
-Thirteen kinds, one rule: every token contains the literal marker `canary`
+Nineteen kinds, one rule: every token contains the literal marker `canary`
 (case-insensitive). That marker is the entire safety story. No real
 credential contains it, so a canary can never be confused with one, by a
 person or by a scanner.
@@ -20,6 +20,12 @@ person or by a scanner.
 | `jwt_token` | `<jwt header>.<base64url payload>.canary-sig-<16 hex>` | The signature segment is literally `canary-sig-...`; no JWT parser validates it |
 | `credit_card` | `4111-canary-1111-<4 digits>` | Non-digit `canary` segment; can never be a real PAN |
 | `private_key` | `-----BEGIN CANARY PRIVATE KEY-----` multiline block | `CANARY` in the armor headers; no PEM parser accepts it |
+| `oauth_refresh_token` | `oauth-refresh-canary-<32 hex>` | Marked; the long-lived companion to `oauth_token` |
+| `mysql_conn_string` | `mysql://svc:canary-mysql-<8 hex>@db.example-corp.internal:3306/appdb` | Reserved `.internal` host that does not exist |
+| `mongodb_conn_string` | `mongodb://svc:canary-mongo-<8 hex>@db.example-corp.internal:27017/appdb` | Reserved `.internal` host that does not exist |
+| `redis_conn_string` | `redis://svc:canary-redis-<8 hex>@cache.example-corp.internal:6379/0` | Reserved `.internal` host that does not exist |
+| `tracked_memo` | `CANARY MEMO <2 digits>: project <codeword> [tracking: TRK-CANARY-<8 hex>]` | Plainly labeled; the tracking ID is part of the token, so a leak of just the reference line still trips |
+| `aws_secret_key` | `aws-secret-canary-<32 hex>` | Plainly labeled; a real AWS secret key is unlabeled base64 |
 
 A few design notes:
 

@@ -65,6 +65,13 @@ old set cannot shadow the new one in scans. Keep the old tokens in your
 scan set for a grace period (an attacker might exfiltrate a stale
 document), then retire them.
 
+To make the schedule checkable instead of remembered, run
+`rag-canary rotation-status --canaries canaries.json --interval-days 30`
+from a scheduled job. The set ages from its oldest token, the check
+warns inside the last week, and it exits 1 once the set is overdue.
+See [rotation scheduling](rotation.md) for the model and a copy-paste
+Actions workflow.
+
 ## Secrecy
 
 The tokens themselves are not sensitive (they are fake), but the

@@ -43,6 +43,12 @@ CANARY_KINDS: tuple[str, ...] = (
     "jwt_token",
     "credit_card",
     "private_key",
+    "oauth_refresh_token",
+    "mysql_conn_string",
+    "mongodb_conn_string",
+    "redis_conn_string",
+    "tracked_memo",
+    "aws_secret_key",
 )
 
 MARKER = "canary"
@@ -171,6 +177,29 @@ def _build_token(kind: str, rng: _TokenRng) -> str:
         # chunker) across line breaks.
         body = "\n".join(rng.hex(48) for _ in range(4))
         return f"-----BEGIN CANARY PRIVATE KEY-----\n{body}\n-----END CANARY PRIVATE KEY-----"
+    if kind == "oauth_refresh_token":
+        # The long-lived companion to oauth_token. Refresh tokens are the
+        # ones teams forget in runbooks, so they are prime exfil bait.
+        return f"oauth-refresh-canary-{rng.hex(32)}"
+    if kind == "mysql_conn_string":
+        return f"mysql://svc:canary-mysql-{rng.hex(8)}@db.example-corp.internal:3306/appdb"
+    if kind == "mongodb_conn_string":
+        return f"mongodb://svc:canary-mongo-{rng.hex(8)}@db.example-corp.internal:27017/appdb"
+    if kind == "redis_conn_string":
+        return f"redis://svc:canary-redis-{rng.hex(8)}@cache.example-corp.internal:6379/0"
+    if kind == "tracked_memo":
+        # An internal memo with a tracking ID a records system would
+        # carry. The tracking ID is part of the token, so a leak that
+        # copies only the reference line still trips the wire.
+        return (
+            f"CANARY MEMO {rng.digits(2)}: project {rng.choice(_MEMO_CODEWORDS)} "
+            f"[tracking: TRK-CANARY-{rng.hex(8).upper()}]"
+        )
+    if kind == "aws_secret_key":
+        # A real AWS secret access key is 40 base64 characters with no
+        # label at all. This one is plainly labeled, so it can never be
+        # pasted into a real config by mistake.
+        return f"aws-secret-canary-{rng.hex(32)}"
     raise ValueError(f"unknown canary kind: {kind!r}")
 
 
@@ -206,7 +235,7 @@ def generate_canaries(
 ) -> list[Canary]:
     """Generate `n` unique canary tokens.
 
-    `kinds` selects a subset of the thirteen canary kinds; the default
+    `kinds` selects a subset of the nineteen canary kinds; the default
     uses all of them, cycling round-robin so the mix stays even. `seed`
     makes the output fully deterministic (same seed, same tokens, same
     ids).
