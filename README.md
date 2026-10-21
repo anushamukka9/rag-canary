@@ -85,6 +85,21 @@ $ rag-canary rotate --old canaries.json -n 10 --seed 77 -o canaries-v2.json
 wrote 10 fresh canaries to canaries-v2.json
 ```
 
+Check a set against its rotation schedule. The set ages from its
+oldest token; the check exits 1 when the set is overdue, so a
+scheduled job can fail loudly:
+
+```bash
+$ rag-canary rotation-status --canaries canaries.json --interval-days 30
+rotation: 19 canaries, oldest created 2026-10-01T12:00:00+00:00
+schedule: every 30 days, warning 7 days ahead
+next rotation due: 2026-10-31T12:00:00+00:00
+state: current, 28 day(s) left.
+```
+
+See [docs/rotation.md](docs/rotation.md) for the schedule model and a
+copy-paste Actions workflow.
+
 Try the bundled examples: `examples/sample_corpus.jsonl` (a small demo
 corpus), `examples/plant_example.py` (plant and inspect),
 `examples/scan_example.py` (a simulated exfiltration and the scan that
@@ -96,7 +111,7 @@ and a shareable attack log).
 
 ## Canary kinds
 
-Thirteen kinds, one rule: every token contains the literal marker `canary`.
+Nineteen kinds, one rule: every token contains the literal marker `canary`.
 Shapes are close to the real thing so they survive being copied into
 attacker output, but they break every partner pattern I know about.
 
@@ -115,11 +130,24 @@ attacker output, but they break every partner pattern I know about.
 | `jwt_token` | `<jwt header>.<payload>.canary-sig-<hex>` (signature is literally `canary-sig-...`) |
 | `credit_card` | `4111-canary-1111-<digits>` (non-digit segment; never a real PAN) |
 | `private_key` | Multiline `-----BEGIN CANARY PRIVATE KEY-----` block (exercises your chunker) |
+| `oauth_refresh_token` | `oauth-refresh-canary-<hex>` (the long-lived companion to `oauth_token`) |
+| `mysql_conn_string` | `mysql://svc:canary-mysql-<hex>@db.example-corp.internal:3306/appdb` |
+| `mongodb_conn_string` | `mongodb://svc:canary-mongo-<hex>@db.example-corp.internal:27017/appdb` |
+| `redis_conn_string` | `redis://svc:canary-redis-<hex>@cache.example-corp.internal:6379/0` |
+| `tracked_memo` | `CANARY MEMO <n>: project <codeword> [tracking: TRK-CANARY-<hex>]` |
+| `aws_secret_key` | `aws-secret-canary-<hex>` (plainly labeled; a real one never is) |
+
+The last six are the v0.3.0 variety pack: refresh tokens, the database
+connection strings teams actually paste into runbooks (MySQL, MongoDB,
+Redis alongside the original Postgres one), an internal memo whose
+tracking ID is part of the token, and a labeled AWS secret key. Try
+them with `examples/variety_pack.py`.
 
 See [docs/canary-kinds.md](docs/canary-kinds.md) for the full safety notes.
 Planting strategies and the manifest are documented in
 [docs/planting.md](docs/planting.md); scanning in
-[docs/scanning.md](docs/scanning.md); the design playbook (kind
+[docs/scanning.md](docs/scanning.md); rotation scheduling in
+[docs/rotation.md](docs/rotation.md); the design playbook (kind
 selection, density, rotation, secrecy) in
 [docs/design.md](docs/design.md).
 

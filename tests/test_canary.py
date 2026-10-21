@@ -172,8 +172,8 @@ def test_new_kinds_have_plant_sentences_and_labels():
         assert kind in _DEDICATED_LABELS
 
 
-def test_thirteen_kinds_total():
-    assert len(CANARY_KINDS) == 13
+def test_nineteen_kinds_total():
+    assert len(CANARY_KINDS) == 19
 
 
 def test_rotate_canaries_avoids_old_tokens():

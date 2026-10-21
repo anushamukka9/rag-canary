@@ -1,4 +1,4 @@
-"""Command-line interface: rag-canary generate|plant|scan|verify|rotate"""
+"""Command-line interface: rag-canary generate|plant|scan|verify|rotate|rotation-status"""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from pathlib import Path
 from . import __version__, generate_canaries, plant_canaries, rotate_canaries, verify_planted
 from .canary import CANARY_KINDS, Canary
 from .report import LeakReport
+from .rotation import parse_now, rotation_status
 from .scan import scan_text
 from .verify import VerifyReport
 
@@ -208,6 +209,29 @@ def cmd_rotate(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_rotation_status(args: argparse.Namespace) -> int:
+    try:
+        canaries = _read_canaries(args.canaries)
+        now = parse_now(args.now)
+        status = rotation_status(
+            canaries,
+            interval_days=args.interval_days,
+            warning_days=args.warning_days,
+            now=now,
+        )
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    if args.format == "json":
+        print(status.to_json())
+    else:
+        print(status.summary())
+    if status.should_rotate:
+        print("\nOVERDUE: this canary set is past its rotation date.", file=sys.stderr)
+        return 1
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="rag-canary",
@@ -299,6 +323,29 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=["table", "json"], default="table", help="Output format."
     )
     verify.set_defaults(func=cmd_verify)
+
+    rot_status = sub.add_parser(
+        "rotation-status", help="Check a canary set against its rotation schedule."
+    )
+    rot_status.add_argument("--canaries", required=True, help="Canaries JSON from `generate`.")
+    rot_status.add_argument(
+        "--interval-days", type=int, default=30, help="Rotate every N days (default: 30)."
+    )
+    rot_status.add_argument(
+        "--warning-days",
+        type=int,
+        default=7,
+        help="Warn this many days before the due date (default: 7).",
+    )
+    rot_status.add_argument(
+        "--now",
+        default=None,
+        help="ISO-8601 moment to check against (default: now, UTC). For reproducible reports.",
+    )
+    rot_status.add_argument(
+        "--format", choices=["table", "json"], default="table", help="Output format."
+    )
+    rot_status.set_defaults(func=cmd_rotation_status)
     return parser
 
 
