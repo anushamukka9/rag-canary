@@ -57,12 +57,18 @@ attacker who would bother to encode.
 ## Reports
 
 `LeakReport` gives you counts (leaks, distinct canaries hit, kinds hit,
-documents hit) and per-canary hits, as JSON or Markdown:
+documents hit) and per-canary hits, as JSON, Markdown, or HTML:
 
 ```python
 report.to_json()      # machine-readable, for artifacts and dashboards
 report.to_markdown()  # paste into an incident ticket or PR
+report.to_html()      # single static file for a person, no dependencies
+report.severity_summary()  # hits per severity, plus a total
 ```
+
+The HTML report adds a severity summary and, when you pass the
+prompt that produced the output, shows which prompt carried the
+canaries out. See [detection-report](detection-report.md).
 
 ## In a pipeline
 

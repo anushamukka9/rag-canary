@@ -148,6 +148,8 @@ def cmd_scan(args: argparse.Namespace) -> int:
         print(report.to_json())
     elif args.format == "markdown":
         print(report.to_markdown(), end="")
+    elif args.format == "html":
+        print(report.to_html(), end="")
     else:
         print(_format_scan_table(by_file))
 
@@ -297,7 +299,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     scan.add_argument(
         "--format",
-        choices=["table", "json", "markdown"],
+        choices=["table", "json", "markdown", "html"],
         default="table",
         help="Output format (default: table).",
     )

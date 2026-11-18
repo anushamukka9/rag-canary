@@ -11,8 +11,11 @@ What it does:
 3. Runs three scripted injection attacks: expects the wire to trip.
 4. Scans every answer with rag-canary and prints the tripwire report.
 5. Writes the whole run to attack-log.md so you can share it.
+6. Writes detection-report.html: a single static HTML file with, per
+   attack, which canaries fired, the prompt that carried them out,
+   and a severity summary. Open it in any browser, no dependencies.
 
-Everything is seeded, so the log is identical on every run.
+Everything is seeded, so both files are identical on every run.
 """
 
 from __future__ import annotations
@@ -25,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "src"))
 
 from demo_rag import ATTACKS, CLEAN_QUESTION, DemoRAG, run_attacks  # noqa: E402
 
-from rag_canary import LeakReport  # noqa: E402
+from rag_canary import LeakReport, render_attack_report_html  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 
@@ -57,7 +60,8 @@ def main() -> None:
     log.append("## Attacks")
     log.append("")
     tripped = 0
-    for name, query, _answer, leaks in run_attacks(rag):
+    attack_results = run_attacks(rag)
+    for name, query, _answer, leaks in attack_results:
         report = LeakReport(leaks=leaks, label=f"attack-simulation/{name}")
         log.append(f"### {name}")
         log.append("")
@@ -89,6 +93,16 @@ def main() -> None:
     (HERE / "attack-log.md").write_text(text, encoding="utf-8")
     print(text)
     print("wrote attack-log.md")
+
+    html_text = render_attack_report_html(
+        control_query=CLEAN_QUESTION,
+        control_leaks=clean_leaks,
+        attacks=[(name, query, leaks) for name, query, _answer, leaks in attack_results],
+        total_canaries=len(rag.canaries),
+        total_docs=len(rag.docs),
+    )
+    (HERE / "detection-report.html").write_text(html_text, encoding="utf-8")
+    print("wrote detection-report.html")
 
 
 if __name__ == "__main__":

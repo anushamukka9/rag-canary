@@ -1,4 +1,4 @@
-"""Leak reports: counts and per-canary hits, as JSON or Markdown."""
+"""Leak reports: counts and per-canary hits, as JSON, Markdown, or HTML."""
 
 from __future__ import annotations
 
@@ -47,6 +47,22 @@ class LeakReport:
                 for leak in self.leaks
             ],
         }
+
+    def severity_summary(self) -> dict:
+        """Hit counts per severity, plus a total. See html_report."""
+        from .html_report import severity_summary
+
+        return severity_summary(self.leaks)
+
+    def to_html(self, prompt: str | None = None) -> str:
+        """Standalone HTML page for this report. No dependencies.
+
+        `prompt`, when given, is shown as the prompt that carried the
+        canaries out.
+        """
+        from .html_report import render_leak_report_html
+
+        return render_leak_report_html(self, prompt=prompt)
 
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), indent=2)
