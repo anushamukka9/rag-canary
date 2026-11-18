@@ -20,9 +20,18 @@ python examples/attack-simulation/demo_rag.py attack
 # ask your own question; injection cues flip the mock into verbatim mode
 python examples/attack-simulation/demo_rag.py ask "How do I renew my VPN profile?"
 
-# the full scripted run, with a shareable log
-python examples/attack-simulation/attack.py   # writes attack-log.md
+# the full scripted run, with a shareable log and an HTML report
+python examples/attack-simulation/attack.py   # writes attack-log.md and detection-report.html
 ```
+
+The HTML detection report is a single static file, no dependencies.
+Open `detection-report.html` in any browser. It leads with the
+control, then gives each attack its own section: the prompt that
+carried the canaries out, a severity summary for that attack, and
+the table of canaries that fired, with the document each was planted
+in. A checked-in copy is in this directory so you can see the shape
+without running anything. Severity is assigned per canary kind; see
+`docs/detection-report.md` in the repo for the table and its limits.
 
 The `attack` run plants 12 canaries across 8 documents, asks the clean
 question (zero leaks, that is the control working), then runs three
@@ -40,6 +49,7 @@ output pipeline.
 | `DemoRAG.answer` (the mock) | Your model call |
 | `scan_answer` after every answer | A scan step in your logging or output pipeline |
 | `attack-log.md` | Your incident record: which doc leaked, which canary, the snippet |
+| `detection-report.html` | The same record for a person: per-attack prompts, severity summary, canaries that fired |
 
 The point of the planting strategy: `plant_canaries` records each
 canary's `planted_in` document in the manifest, so the report tells you

@@ -61,7 +61,14 @@ CI: loud. Machine-readable output for pipelines:
 ```bash
 rag-canary scan --canaries canaries.json --format json outputs/*.log > leak-report.json
 rag-canary scan --canaries canaries.json --format markdown outputs/*.log  # paste into a ticket
+rag-canary scan --canaries canaries.json --format html outputs/*.log > detection-report.html
 ```
+
+The HTML format is a single static file with no dependencies: which
+canaries fired, where each was planted, and a severity summary
+(critical, high, medium, low, assigned per canary kind). Open it in
+any browser or attach it to an incident. See
+[docs/detection-report.md](docs/detection-report.md).
 
 Or from Python:
 
@@ -107,7 +114,7 @@ catches it), `examples/plant_detect_walkthrough.py` (the full
 plant-verify-attack-detect loop, including a base64-encoded
 exfiltration), and `examples/attack-simulation/` (a runnable demo RAG
 you attack end to end: scripted prompt injections, the tripwire firing,
-and a shareable attack log).
+a shareable attack log, and an HTML detection report).
 
 ## Canary kinds
 
@@ -146,7 +153,8 @@ them with `examples/variety_pack.py`.
 See [docs/canary-kinds.md](docs/canary-kinds.md) for the full safety notes.
 Planting strategies and the manifest are documented in
 [docs/planting.md](docs/planting.md); scanning in
-[docs/scanning.md](docs/scanning.md); rotation scheduling in
+[docs/scanning.md](docs/scanning.md); HTML detection reports in
+[docs/detection-report.md](docs/detection-report.md); rotation scheduling in
 [docs/rotation.md](docs/rotation.md); the design playbook (kind
 selection, density, rotation, secrecy) in
 [docs/design.md](docs/design.md).

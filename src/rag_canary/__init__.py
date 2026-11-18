@@ -25,26 +25,40 @@ Quickstart:
 """
 
 from .canary import CANARY_KINDS, Canary, generate_canaries, rotate_canaries
+from .html_report import (
+    SEVERITY_BY_KIND,
+    overall_severity,
+    render_attack_report_html,
+    render_leak_report_html,
+    severity_for_kind,
+    severity_summary,
+)
 from .plant import plant_canaries
 from .report import LeakReport
 from .rotation import RotationStatus, rotation_status
 from .scan import Leak, scan_files, scan_text
 from .verify import VerifyReport, verify_planted
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "CANARY_KINDS",
+    "SEVERITY_BY_KIND",
     "Canary",
     "Leak",
     "LeakReport",
     "RotationStatus",
     "VerifyReport",
     "generate_canaries",
+    "overall_severity",
     "plant_canaries",
+    "render_attack_report_html",
+    "render_leak_report_html",
     "rotate_canaries",
     "rotation_status",
     "scan_files",
     "scan_text",
+    "severity_for_kind",
+    "severity_summary",
     "verify_planted",
 ]
